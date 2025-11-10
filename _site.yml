@@ -1,0 +1,8 @@
+name: "jeremstonks_shmonks"
+navbar:
+    title: "Jerem's Stonks"
+left:
+    - text: "Home"
+href: index.html
+
+

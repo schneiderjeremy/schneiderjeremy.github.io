@@ -1,0 +1,155 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+# Preliminaires
+rm(list=ls())
+library(dplyr)
+library(tidyverse)
+library(prophet)
+library(lubridate)
+library(quantmod)
+```
+
+## Jerem's Stonks {.tabset}
+```{r, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+# Remove warnings
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+
+### Download data ###
+#--------------------
+today <- as.character(Sys.Date())
+first <- as.character(Sys.Date()-500)
+
+# Apple data
+aapl <- getSymbols("AAPL", from = first,
+           to = today,warnings = F,
+           auto.assign = F)
+aapl <- as.data.frame(aapl) 
+aapl$date = as.Date(rownames(aapl))
+aapl <- aapl %>%
+  select(date,AAPL.Close) %>%
+  rename(ds=date) %>%
+  rename(y=AAPL.Close) 
+rownames(aapl) <- 1:nrow(aapl)
+
+# Apple predictions
+m <- prophet(aapl, daily.seasonality=T, yearly.seasonality=T)
+future <- make_future_dataframe(m, periods = 180)
+forecast <- predict(m, future)
+
+
+# Tesla data
+tsla <- getSymbols("TSLA", from = first,
+           to = today,warnings = FALSE,
+           auto.assign = F)
+tsla <- as.data.frame(tsla) 
+tsla$date = as.Date(rownames(tsla))
+tsla <- tsla %>%
+  select(date,TSLA.Close) %>%
+  rename(ds=date) %>%
+  rename(y=TSLA.Close) 
+rownames(tsla) <- 1:nrow(tsla)
+
+# Tesla Predictions
+m1 <- prophet(tsla, daily.seasonality=T, yearly.seasonality=T)
+future1 <- make_future_dataframe(m1, periods = 180)
+forecast1 <- predict(m1, future1)
+
+
+# Microsoft data
+msft <- getSymbols("MSFT", from = first,
+           to = today,warnings = FALSE,
+           auto.assign = F)
+msft <- as.data.frame(msft) 
+msft$date = as.Date(rownames(msft))
+msft <- msft %>%
+  select(date,MSFT.Close) %>%
+  rename(ds=date) %>%
+  rename(y=MSFT.Close) 
+rownames(msft) <- 1:nrow(msft)
+
+# Microsoft Predictions
+m2 <- prophet(msft, daily.seasonality=T, yearly.seasonality=T)
+future2 <- make_future_dataframe(m2, periods = 180)
+forecast2 <- predict(m2, future2)
+
+# Amazon data
+amzn <- getSymbols("AMZN", from = first,
+           to = today,warnings = FALSE,
+           auto.assign = F)
+amzn <- as.data.frame(amzn) 
+amzn$date = as.Date(rownames(amzn))
+amzn <- amzn %>%
+  select(date,AMZN.Close) %>%
+  rename(ds=date) %>%
+  rename(y=AMZN.Close) 
+rownames(amzn) <- 1:nrow(amzn)
+
+# Amazon Predictions
+m3 <- prophet(amzn, daily.seasonality=T, yearly.seasonality=T)
+future3 <- make_future_dataframe(m3, periods = 180)
+forecast3 <- predict(m3, future3)
+
+# S&P 500 data
+snp <- getSymbols("^GSPC", from = first,
+           to = today,warnings = FALSE,
+           auto.assign = F)
+snp <- as.data.frame(snp) 
+snp$date = as.Date(rownames(snp))
+snp <- snp %>%
+  select(date,GSPC.Close) %>%
+  rename(ds=date) %>%
+  rename(y=GSPC.Close) 
+rownames(snp) <- 1:nrow(snp)
+
+# S&P Predictions
+m4 <- prophet(snp, daily.seasonality=T, yearly.seasonality=T)
+future4 <- make_future_dataframe(m4, periods = 180)
+forecast4 <- predict(m4, future4)
+
+```
+
+
+### Apple
+```{r Apple, fig.height=8, fig.width=8, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+dyplot.prophet(m,forecast,xlab="Date",ylab="Value (USD)",main = "Jerem's Stonk Predictions for Apple")
+```
+
+### Tesla
+```{r Tesla, fig.height=8, fig.width=8, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+dyplot.prophet(m1,forecast1,xlab="Date",ylab="Value (USD)",main = "Jerem's Stonk Predictions for Tesla")
+```
+
+### Microsoft
+```{r Microsoft, fig.height=8, fig.width=8, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+dyplot.prophet(m2,forecast2,xlab="Date",ylab="Value (USD)",main = "Jerem's Stonk Predictions for Microsoft")
+```
+
+### Amazon
+```{r Amazon, fig.height=8, fig.width=8, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+dyplot.prophet(m3,forecast3,xlab="Date",ylab="Value (USD)",main = "Jerem's Stonk Predictions for Amazon")
+```
+
+### S&P500
+```{r S&P500, fig.height=8, fig.width=8, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+dyplot.prophet(m4,forecast4,xlab="Date",ylab="Value (USD)",main = "Jerem's Stonk Predictions for S&P 500")
+```
+
+### Jerem's Newsletter
+```{r, eval = TRUE, warning = FALSE, message = FALSE, echo=FALSE}
+for(i in 1:4){
+  pred <- paste0("forecast",i,sep="")
+  pred <- forecast4
+}
+```
+
+Jerem's best stock to buy tomorrow is Microsoft

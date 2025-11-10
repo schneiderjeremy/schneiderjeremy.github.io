@@ -1,8 +1,15 @@
-name: "jeremstonks_shmonks"
+name: "schneiderjeremy.github.io"
+output_dir: "."        # write HTML to the repo root for a user site
 navbar:
-    title: "Jerem's Stonks"
-left:
+  title: "Jeremy Schneider"
+  left:
     - text: "Home"
-href: index.html
-
-
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "Methods"
+      href: methods.html
+output:
+  html_document:
+    theme: flatly       # pick any theme you like
+    toc: false

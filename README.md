@@ -1,1 +1,1 @@
-# schneiderjeremy.github.io
+# I am Jerem, they are stonks. JeremStonks

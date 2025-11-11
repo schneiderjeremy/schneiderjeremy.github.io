@@ -1,11 +1,12 @@
 name: "schneiderjeremy.github.io"
-output_dir: "."        # write HTML to the repo root for a user site
+output_dir: "."         # write HTML to the repo root
 navbar:
-  title: "Jeremy Stonks"
+  title: "Jeremy Schneider"
   left:
     - text: "Home"
       href: index.html
+    - text: "About"
+      href: about.html
 output:
   html_document:
-    theme: jekyll       # pick any theme you like
-    toc: false
+    theme: flatly
